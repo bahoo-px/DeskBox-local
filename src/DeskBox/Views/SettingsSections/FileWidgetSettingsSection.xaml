@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="DeskBox.Views.SettingsSections.FileWidgetSettingsSection"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:DeskBox.Controls"
+    xmlns:svc="using:DeskBox.Services"
+    xmlns:toolkit="using:CommunityToolkit.WinUI.Controls">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ms-appx:///Styles/SettingsOverviewResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel Style="{StaticResource SectionPanelStyle}">
+        <TextBlock Style="{StaticResource SectionTitleTextStyle}" AutomationProperties.HeadingLevel="Level1" svc:Localized.Key="Settings.Appearance.DetailTitle" />
+        <StackPanel x:Name="SectionCardsPanel" Margin="0,8,0,0" Spacing="4">
+            <toolkit:SettingsCard
+                Click="NestedSettingsButton_Click"
+                HorizontalContentAlignment="Right"
+                IsClickEnabled="True"
+                Tag="DesktopOrganizationSettings"
+                svc:Localized.DescriptionKey="DesktopOrganization.Settings.EntryDescription"
+                svc:Localized.HeaderKey="DesktopOrganization.Settings.Title">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE74C;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Click="OrganizeDesktopButton_Click" Style="{StaticResource AccentActionButtonStyle}">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <FontIcon FontSize="16" Glyph="&#xE74C;" />
+                            <TextBlock svc:Localized.Key="DesktopOrganization.Settings.StartAction" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard
+                Click="NestedSettingsButton_Click"
+                IsClickEnabled="True"
+                Tag="FileDisplaySettings"
+                svc:Localized.DescriptionKey="Settings.Group.FileLayout.Description"
+                svc:Localized.HeaderKey="Settings.Group.FileLayout.Title">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE8A5;" />
+                </toolkit:SettingsCard.HeaderIcon>
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard
+                Click="NestedSettingsButton_Click"
+                Description="{x:Bind FileStack.SettingsSummaryText, Mode=OneWay}"
+                HorizontalContentAlignment="Right"
+                IsClickEnabled="True"
+                Tag="FileStackSettings"
+                svc:Localized.HeaderKey="Settings.FileStacks.Title">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE81E;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <ComboBox svc:Localized.AutomationNameKey="Settings.FileStacks.OpenMode.Title"
+                    MinWidth="{StaticResource SettingsControlMinWidth}"
+                    VerticalAlignment="Center"
+                    ItemsSource="{x:Bind FileStack.AvailableOpenModeOptions, Mode=OneWay}"
+                    controls:SettingsComboBox.Value="{x:Bind FileStack.OpenMode, Mode=TwoWay}" />
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard
+                HorizontalContentAlignment="Right"
+                svc:Localized.DescriptionKey="Settings.FileWidget.FolderOpenBehavior.Description"
+                svc:Localized.HeaderKey="Settings.FileWidget.FolderOpenBehavior.Title">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE838;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <ComboBox svc:Localized.AutomationNameKey="Settings.FileWidget.FolderOpenBehavior.Title"
+                    MinWidth="{StaticResource SettingsControlMinWidth}"
+                    VerticalAlignment="Center"
+                    ItemsSource="{x:Bind FeatureWidgets.AvailableFolderOpenBehaviorOptionItems, Mode=OneWay}"
+                    controls:SettingsComboBox.Value="{x:Bind FeatureWidgets.FolderOpenBehavior, Mode=TwoWay}" />
+            </toolkit:SettingsCard>
+
+            <toolkit:SettingsCard
+                HorizontalContentAlignment="Right"
+                svc:Localized.DescriptionKey="Settings.FileWidget.SystemContextMenu.Description"
+                svc:Localized.HeaderKey="Settings.FileWidget.SystemContextMenu.Title"
+                svc:InfoTip.TitleKey="Settings.FileWidget.SystemContextMenu.InfoTip.Title"
+                svc:InfoTip.BodyKey="Settings.FileWidget.SystemContextMenu.InfoTip.Description">
+                <toolkit:SettingsCard.HeaderIcon>
+                    <FontIcon Glyph="&#xE712;" />
+                </toolkit:SettingsCard.HeaderIcon>
+                <ToggleSwitch svc:Localized.AutomationNameKey="Settings.FileWidget.SystemContextMenu.Title"
+                    MinWidth="0"
+                    VerticalAlignment="Center"
+                    OnContent=""
+                    OffContent=""
+                    IsOn="{x:Bind Interaction.FileItemContextMenuEnabled, Mode=TwoWay}" />
+            </toolkit:SettingsCard>
+
+        </StackPanel>
+    </StackPanel>
+</UserControl>

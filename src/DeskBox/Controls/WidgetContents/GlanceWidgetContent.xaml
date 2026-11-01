@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="DeskBox.Controls.WidgetContents.GlanceWidgetContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:DeskBox.Helpers"
+    xmlns:local="using:DeskBox.Controls.WidgetContents"
+    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+    Loaded="UserControl_Loaded"
+    Unloaded="UserControl_Unloaded"
+    SizeChanged="UserControl_SizeChanged"
+    PointerEntered="Root_PointerEntered"
+    PointerExited="Root_PointerExited">
+
+    <UserControl.Resources>
+        <local:GlanceBoolToVisibilityConverter x:Key="BoolToVisibility" />
+        <local:GlanceInverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility" />
+        <local:GlanceBoolToFontWeightConverter x:Key="BoolToFontWeight" />
+        <AcrylicBrush
+            x:Key="GlanceCalendarAcrylicBrush"
+            FallbackColor="{ThemeResource SolidBackgroundFillColorBase}"
+            TintColor="{ThemeResource SolidBackgroundFillColorBase}" />
+        <AcrylicBrush
+            x:Key="GlanceActionBarAcrylicBrush"
+            FallbackColor="#B52A2A2A"
+            TintColor="#202020"
+            TintLuminosityOpacity="0.52"
+            TintOpacity="0.18" />
+        <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#24FFFFFF" />
+        <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#3DFFFFFF" />
+        <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White" />
+        <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White" />
+        <Style x:Key="GlanceCalendarDayItemStyle" TargetType="CalendarViewDayItem">
+            <Setter Property="MinWidth" Value="34" />
+            <Setter Property="MinHeight" Value="24" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="FocusVisualMargin" Value="-2" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CalendarViewDayItem">
+                        <!-- CalendarView keeps native navigation and date semantics;
+                             this compact template owns the two-line day typography. -->
+                        <Grid MinWidth="34" MinHeight="24" Background="Transparent">
+                            <!-- Host-side today pill: the native TodayBackground is
+                                 driven by a today date cached once at control
+                                 creation (microsoft-ui-xaml #11205) and never moves
+                                 across midnight. Drawing it from Tag.IsToday — the
+                                 same host-computed flag the text highlight uses —
+                                 keeps background and text on one refresh path. -->
+                            <Border
+                                Background="{ThemeResource AccentFillColorDefaultBrush}"
+                                CornerRadius="6"
+                                IsHitTestVisible="False"
+                                Visibility="{Binding Tag.IsToday, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}" />
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Opacity="{Binding Tag.PrimaryOpacity, RelativeSource={RelativeSource TemplatedParent}}"
+                                Spacing="0"
+                                Visibility="{Binding Tag.IsToday, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource InverseBoolToVisibility}}">
+                                <TextBlock
+                                    helpers:WidgetTextShadow.Cast="True"
+                                    HorizontalAlignment="Center"
+                                    FontSize="11"
+                                    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                    LineHeight="13"
+                                    LineStackingStrategy="BlockLineHeight"
+                                    Text="{Binding Tag.DayText, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Typography.NumeralAlignment="Tabular" />
+                                <TextBlock
+                                    helpers:WidgetTextShadow.Cast="True"
+                                    MaxWidth="32"
+                                    HorizontalAlignment="Center"
+                                    FontSize="7.5"
+                                    FontWeight="{Binding Tag.IsFestival, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToFontWeight}}"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    LineHeight="10"
+                                    LineStackingStrategy="BlockLineHeight"
+                                    MaxLines="1"
+                                    Opacity="{Binding Tag.SecondaryOpacity, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Text="{Binding Tag.SecondaryText, RelativeSource={RelativeSource TemplatedParent}}"
+                                    TextTrimming="CharacterEllipsis"
+                                    Visibility="{Binding Tag.HasSecondaryText, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}" />
+                            </StackPanel>
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="0"
+                                Visibility="{Binding Tag.IsToday, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock
+                                    helpers:WidgetTextShadow.Cast="True"
+                                    HorizontalAlignment="Center"
+                                    FontSize="11"
+                                    FontWeight="SemiBold"
+                                    Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                    LineHeight="13"
+                                    LineStackingStrategy="BlockLineHeight"
+                                    Text="{Binding Tag.DayText, RelativeSource={RelativeSource TemplatedParent}}"
+                                    Typography.NumeralAlignment="Tabular" />
+                                <TextBlock
+                                    helpers:WidgetTextShadow.Cast="True"
+                                    MaxWidth="32"
+                                    HorizontalAlignment="Center"
+                                    FontSize="7.5"
+                                    FontWeight="{Binding Tag.IsFestival, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToFontWeight}}"
+                                    Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                    LineHeight="10"
+                                    LineStackingStrategy="BlockLineHeight"
+                                    MaxLines="1"
+                                    Opacity="0.86"
+                                    Text="{Binding Tag.SecondaryText, RelativeSource={RelativeSource TemplatedParent}}"
+                                    TextTrimming="CharacterEllipsis"
+                                    Visibility="{Binding Tag.HasSecondaryText, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisibility}}" />
+                            </StackPanel>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid
+        x:Name="RootGrid"
+        ActualThemeChanged="RootGrid_ActualThemeChanged"
+        Background="Transparent">
+
+        <Grid x:Name="BackgroundImageLayer" IsHitTestVisible="False">
+            <Border x:Name="BackgroundA" Opacity="0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <CompositeTransform />
+                </Border.RenderTransform>
+            </Border>
+            <Border x:Name="BackgroundB" Opacity="0" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <CompositeTransform />
+                </Border.RenderTransform>
+            </Border>
+        </Grid>
+
+        <Border
+            x:Name="ReadabilityLayer"
+            Background="Black"
+            IsHitTestVisible="False"
+            Opacity="{Binding ReadabilityOpacity}"
+            Visibility="{Binding ShowNonCalendarImageReadability, Converter={StaticResource BoolToVisibility}}" />
+        <Border
+            x:Name="CalendarReadabilityLayer"
+            Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+            IsHitTestVisible="False"
+            Opacity="{Binding ReadabilityOpacity}"
+            Visibility="{Binding ShowCalendarImageReadability, Converter={StaticResource BoolToVisibility}}" />
+        <Border
+            IsHitTestVisible="False"
+            Opacity="0.34"
+            Visibility="{Binding ShowNonCalendarImageReadability, Converter={StaticResource BoolToVisibility}}">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="#00000000" Offset="0.34" />
+                    <GradientStop Color="#78000000" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Grid
+            x:Name="ImageForegroundThemeScope"
+            Padding="20,22,20,18"
+            Visibility="{Binding IsForegroundVisible, Converter={StaticResource BoolToVisibility}}">
+            <StackPanel
+                x:Name="ImmersiveLayoutRoot"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Spacing="-2"
+                Visibility="{Binding IsImmersiveLayout, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock
+                    FontFamily="{Binding TimeFontFamily}"
+                    FontSize="{Binding TimeFontSize}"
+                    FontWeight="SemiBold"
+                    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                    IsTextSelectionEnabled="False"
+                    Text="{Binding TimeText}"
+                    Typography.NumeralAlignment="Tabular"
+                    Visibility="{Binding ShowTime, Converter={StaticResource BoolToVisibility}}" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                        Text="{Binding DateText}"
+                        Visibility="{Binding ShowDate, Converter={StaticResource BoolToVisibility}}" />
+                    <TextBlock
+                        FontSize="14"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding WeekdayText}"
+                        Visibility="{Binding ShowWeekday, Converter={StaticResource BoolToVisibility}}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel
+                x:Name="CenteredLayoutRoot"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Spacing="2"
+                Visibility="{Binding IsCenteredLayout, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontFamily="{Binding TimeFontFamily}"
+                    FontSize="{Binding TimeFontSize}"
+                    FontWeight="SemiBold"
+                    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                    Text="{Binding TimeText}"
+                    Typography.NumeralAlignment="Tabular"
+                    Visibility="{Binding ShowTime, Converter={StaticResource BoolToVisibility}}" />
+                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Spacing="8">
+                    <TextBlock FontSize="14" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{Binding DateText}" Visibility="{Binding ShowDate, Converter={StaticResource BoolToVisibility}}" />
+                    <TextBlock FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding WeekdayText}" Visibility="{Binding ShowWeekday, Converter={StaticResource BoolToVisibility}}" />
+                </StackPanel>
+            </StackPanel>
+
+            <Grid
+                x:Name="EditorialLayoutRoot"
+                Visibility="{Binding IsEditorialLayout, Converter={StaticResource BoolToVisibility}}">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Spacing="2">
+                    <TextBlock FontSize="16" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{Binding DateText}" Visibility="{Binding ShowDate, Converter={StaticResource BoolToVisibility}}" />
+                    <TextBlock FontSize="13" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding WeekdayText}" Visibility="{Binding ShowWeekday, Converter={StaticResource BoolToVisibility}}" />
+                </StackPanel>
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    FontFamily="{Binding TimeFontFamily}"
+                    FontSize="{Binding CompactTimeFontSize}"
+                    FontWeight="SemiBold"
+                    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                    Text="{Binding TimeText}"
+                    Typography.NumeralAlignment="Tabular"
+                    Visibility="{Binding ShowTime, Converter={StaticResource BoolToVisibility}}" />
+            </Grid>
+
+            <Grid
+                x:Name="CalendarLayoutRoot"
+                Visibility="{Binding IsCalendarLayout, Converter={StaticResource BoolToVisibility}}">
+                <Border
+                    IsHitTestVisible="False"
+                    Margin="-20,-22,-20,-18"
+                    Opacity="0.72"
+                    Visibility="{Binding ShowExpandedCalendarImageReadability, Converter={StaticResource BoolToVisibility}}">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="#70000000" Offset="0" />
+                            <GradientStop Color="#00000000" Offset="0.38" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+
+                <StackPanel
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Spacing="-1"
+                    Visibility="{Binding IsExpandedCalendarPresentation, Converter={StaticResource BoolToVisibility}}">
+                    <TextBlock
+                        FontFamily="{Binding TimeFontFamily}"
+                        FontSize="{Binding CompactTimeFontSize}"
+                        FontWeight="SemiBold"
+                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                        Text="{Binding TimeText}"
+                        Typography.NumeralAlignment="Tabular"
+                        Visibility="{Binding ShowTime, Converter={StaticResource BoolToVisibility}}" />
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                        <TextBlock FontSize="12" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" Text="{Binding DateText}" Visibility="{Binding ShowDate, Converter={StaticResource BoolToVisibility}}" />
+                        <TextBlock FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="{Binding WeekdayText}" Visibility="{Binding ShowWeekday, Converter={StaticResource BoolToVisibility}}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <Border
+                    x:Name="CalendarGlassSurface"
+                    Height="{Binding CalendarPanelHeight}"
+                    HorizontalAlignment="Center"
+                    Margin="-6,0,-6,0"
+                    MaxWidth="{Binding CalendarPanelMaxWidth}"
+                    VerticalAlignment="Bottom"
+                    Width="{Binding CalendarPanelWidth}"
+                    CornerRadius="{Binding CalendarCornerRadius}">
+                    <Grid>
+                        <Border
+                            x:Name="CalendarMaterialSurface"
+                            CornerRadius="{Binding CalendarCornerRadius}"
+                            IsHitTestVisible="False" />
+                        <Grid Margin="8,0,8,4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <Grid
+                                Grid.Row="0"
+                                Height="27"
+                                Margin="13,7,6,0"
+                                Visibility="{Binding IsCompactCalendarPresentation, Converter={StaticResource BoolToVisibility}}">
+                                <TextBlock
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    FontFamily="{Binding TimeFontFamily}"
+                                    FontSize="{Binding CalendarCompactTimeFontSize}"
+                                    FontWeight="SemiBold"
+                                    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                    LineHeight="26"
+                                    LineStackingStrategy="BlockLineHeight"
+                                    Margin="0,5,0,-5"
+                                    Text="{Binding TimeText}"
+                                    Typography.NumeralAlignment="Tabular"
+                                    Visibility="{Binding ShowTime, Converter={StaticResource BoolToVisibility}}" />
+                                <StackPanel Margin="0,5,0,-5" HorizontalAlignment="Right" VerticalAlignment="Top" Spacing="0">
+                                    <TextBlock HorizontalAlignment="Right" FontSize="10" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorPrimaryBrush}" LineHeight="12" LineStackingStrategy="BlockLineHeight" Text="{Binding CompactCalendarDateText}" Visibility="{Binding ShowDate, Converter={StaticResource BoolToVisibility}}" />
+                                    <TextBlock HorizontalAlignment="Right" FontSize="9.5" Foreground="{ThemeResource TextFillColorSecondaryBrush}" LineHeight="11" LineStackingStrategy="BlockLineHeight" Text="{Binding WeekdayText}" Visibility="{Binding ShowWeekday, Converter={StaticResource BoolToVisibility}}" />
+                                </StackPanel>
+                            </Grid>
+
+                            <Grid Grid.Row="1">
+                                <CalendarView
+                                    x:Name="NativeCalendarView"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    CalendarItemBackground="Transparent"
+                                    CalendarItemBorderBrush="Transparent"
+                                    CalendarItemBorderThickness="0"
+                                    CalendarItemCornerRadius="6"
+                                    CalendarItemForeground="{ThemeResource TextFillColorPrimaryBrush}"
+                                    CalendarItemHoverBackground="{ThemeResource SubtleFillColorSecondaryBrush}"
+                                    CalendarItemPressedBackground="{ThemeResource SubtleFillColorTertiaryBrush}"
+                                    CalendarViewDayItemChanging="NativeCalendarView_DayItemChanging"
+                                    CalendarViewDayItemStyle="{StaticResource GlanceCalendarDayItemStyle}"
+                                    DayItemFontSize="0.1"
+                                    DayItemMargin="0"
+                                    DayOfWeekFormat="{}{dayofweek.abbreviated(1)}"
+                                    Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                    HorizontalDayItemAlignment="Center"
+                                    IsGroupLabelVisible="False"
+                                    IsOutOfScopeEnabled="True"
+                                    IsTodayHighlighted="False"
+                                    NumberOfWeeksInView="6"
+                                    OutOfScopeBackground="Transparent"
+                                    OutOfScopeForeground="{ThemeResource TextFillColorDisabledBrush}"
+                                    SelectionMode="None"
+                                    VerticalDayItemAlignment="Center">
+                                    <CalendarView.Resources>
+                                        <x:Double x:Key="CalendarViewHeaderNavigationButtonFontSize">13</x:Double>
+                                        <x:Double x:Key="CalendarViewNavigationButtonFontSize">10</x:Double>
+                                        <Thickness x:Key="CalendarViewDayItemMargin">0</Thickness>
+                                        <Thickness x:Key="CalendarViewWeekDayMargin">0</Thickness>
+                                        <Thickness x:Key="CalendarViewWeekDayPadding">1,4,1,4</Thickness>
+                                        <Thickness x:Key="CalendarViewMonthYearItemMargin">3</Thickness>
+                                        <Thickness x:Key="CalendarViewHeaderNavigationButtonPadding">8,6,8,6</Thickness>
+                                        <Thickness x:Key="CalendarViewNavigationButtonPadding">9,6,9,6</Thickness>
+                                        <Thickness x:Key="CalendarViewHeaderNavigationButtonMargin">4,2,2,2</Thickness>
+                                        <Thickness x:Key="CalendarViewNavigationPreviousButtonMargin">2,2,1,2</Thickness>
+                                        <Thickness x:Key="CalendarViewNavigationNextButtonMargin">1,2,4,2</Thickness>
+                                    </CalendarView.Resources>
+                                </CalendarView>
+                                <TextBlock
+                                    x:Name="TraditionalCalendarTitlePresenter"
+                                    Height="29"
+                                    Margin="98,0,70,0"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Top"
+                                    FontSize="8"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    IsHitTestVisible="False"
+                                    LineHeight="29"
+                                    LineStackingStrategy="BlockLineHeight"
+                                    MaxLines="1"
+                                    Opacity="0.68"
+                                    Text="{Binding TraditionalCalendarTitle}"
+                                    TextAlignment="Center"
+                                    TextTrimming="CharacterEllipsis"
+                                    Visibility="Collapsed" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Border
+            x:Name="ActionLayer"
+            Margin="12"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Background="{StaticResource GlanceActionBarAcrylicBrush}"
+            CornerRadius="9"
+            Opacity="0"
+            Padding="3"
+            Visibility="{Binding ShowPhotoControls, Converter={StaticResource BoolToVisibility}}">
+            <Grid ColumnSpacing="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Button AutomationProperties.Name="{Binding PauseToolTip}"
+                    x:Name="PauseButton"
+                    Grid.Column="0"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="PauseButton_Click"
+                    CornerRadius="6"
+                    Foreground="White"
+                    ToolTipService.ToolTip="{Binding PauseToolTip}">
+                    <!-- Native 16 px geometry from @fluentui/react-icons Play16Regular and Pause16Regular. -->
+                    <Viewbox Width="16" Height="16" IsHitTestVisible="False">
+                        <Canvas Width="16" Height="16">
+                            <Path
+                                x:Name="Play16RegularIcon"
+                                Data="M5.75 3.06A.5.5 0 0 0 5 3.5v9c0 .38.41.62.75.44l8-4.5a.5.5 0 0 0 0-.88l-8-4.5ZM4 3.5a1.5 1.5 0 0 1 2.24-1.3l8 4.5a1.5 1.5 0 0 1 0 2.6l-8 4.5A1.5 1.5 0 0 1 4 12.5v-9Z"
+                                Fill="{Binding Foreground, ElementName=PauseButton}"
+                                Visibility="{Binding IsPaused, Converter={StaticResource BoolToVisibility}}" />
+                            <Path
+                                x:Name="Pause16RegularIcon"
+                                Data="M3.75 2C2.78 2 2 2.78 2 3.75v8.5c0 .97.78 1.75 1.75 1.75h1.5C6.22 14 7 13.22 7 12.25v-8.5C7 2.78 6.22 2 5.25 2h-1.5ZM3 3.75c0-.41.34-.75.75-.75h1.5c.41 0 .75.34.75.75v8.5c0 .41-.34.75-.75.75h-1.5a.75.75 0 0 1-.75-.75v-8.5ZM10.75 2C9.78 2 9 2.78 9 3.75v8.5c0 .97.78 1.75 1.75 1.75h1.5c.97 0 1.75-.78 1.75-1.75v-8.5C14 2.78 13.22 2 12.25 2h-1.5ZM10 3.75c0-.41.34-.75.75-.75h1.5c.41 0 .75.34.75.75v8.5c0 .41-.34.75-.75.75h-1.5a.75.75 0 0 1-.75-.75v-8.5Z"
+                                Fill="{Binding Foreground, ElementName=PauseButton}"
+                                Visibility="{Binding IsPaused, Converter={StaticResource InverseBoolToVisibility}}" />
+                        </Canvas>
+                    </Viewbox>
+                </Button>
+                <Button
+                    x:Name="NextButton"
+                    Grid.Column="1"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="NextButton_Click"
+                    CornerRadius="6"
+                    Foreground="White"
+                    ToolTipService.ToolTip="{Binding NextToolTip}">
+                    <!-- Native 16 px geometry from @fluentui/react-icons ArrowRight16Regular. -->
+                    <Viewbox Width="16" Height="16" IsHitTestVisible="False">
+                        <Canvas Width="16" Height="16">
+                            <Path
+                                x:Name="ArrowRight16RegularIcon"
+                                Data="M2.5 7.5a.5.5 0 1 0 0 1h9.7l-4.03 3.63a.5.5 0 1 0 .66.74l5-4.5a.5.5 0 0 0 0-.74l-5-4.5a.5.5 0 0 0-.66.74L12.2 7.5H2.5Z"
+                                Fill="{Binding Foreground, ElementName=NextButton}" />
+                        </Canvas>
+                    </Viewbox>
+                </Button>
+                <Button AutomationProperties.Name="{Binding PhotoInfoText}"
+                    x:Name="SourceButton"
+                    Grid.Column="2"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="PhotoInfoButton_Click"
+                    CornerRadius="6"
+                    Foreground="White"
+                    ToolTipService.ToolTip="{Binding PhotoInfoText}"
+                    Visibility="{Binding HasPhotoInfo, Converter={StaticResource BoolToVisibility}}">
+                    <!-- Native 16 px geometry from @fluentui/react-icons Info16Regular. -->
+                    <Viewbox Width="16" Height="16" IsHitTestVisible="False">
+                        <Canvas Width="16" Height="16">
+                            <Path
+                                x:Name="Info16RegularIcon"
+                                Data="M8.5 7.5a.5.5 0 1 0-1 0v3a.5.5 0 0 0 1 0v-3Zm.25-2a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1ZM2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8Z"
+                                Fill="{Binding Foreground, ElementName=SourceButton}" />
+                        </Canvas>
+                    </Viewbox>
+                </Button>
+            </Grid>
+        </Border>
+
+        <ProgressRing
+            x:Name="DelayedLoadingRing"
+            Width="24"
+            Height="24"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsActive="False"
+            Visibility="Collapsed" />
+    </Grid>
+</UserControl>

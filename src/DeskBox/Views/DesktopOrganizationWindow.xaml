@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="DeskBox.Views.DesktopOrganizationWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:DeskBox.Controls"
+    xmlns:svc="using:DeskBox.Services">
+
+    <Grid
+        x:Name="RootGrid"
+        Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+        KeyDown="RootGrid_KeyDown">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid
+            x:Name="AppTitleBar"
+            Padding="16,0,140,0">
+            <StackPanel
+                Orientation="Horizontal"
+                Spacing="10"
+                VerticalAlignment="Center">
+                <Image Width="18" Height="18" Source="ms-appx:///Assets/deskbox.svg" />
+                <TextBlock
+                    FontSize="13"
+                    FontWeight="SemiBold"
+                    VerticalAlignment="Center"
+                    svc:Localized.Key="DesktopOrganization.Window.Title" />
+            </StackPanel>
+        </Grid>
+
+        <Border
+            x:Name="ContentLayer"
+            Grid.Row="1"
+            Background="{ThemeResource LayerFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="0,1,0,0">
+            <controls:DesktopOrganizationTaskView x:Name="TaskView">
+                <controls:DesktopOrganizationTaskView.Transitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition FromVerticalOffset="4" IsStaggeringEnabled="False" />
+                    </TransitionCollection>
+                </controls:DesktopOrganizationTaskView.Transitions>
+            </controls:DesktopOrganizationTaskView>
+        </Border>
+    </Grid>
+</Window>

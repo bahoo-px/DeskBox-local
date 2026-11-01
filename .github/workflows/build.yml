@@ -1,0 +1,62 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Publish Release (win-x64)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # global.json pins the SDK (10.0.x) matching net10.0-windows10.0.22621.0.
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      # The main project builds DeskBox.Updater through MSBuild, so restore the
+      # whole solution (same as ci.yml) to generate both projects' assets files.
+      - name: Restore
+        shell: pwsh
+        run: dotnet restore .\DeskBox.sln -p:Platform=x64 -p:RuntimeIdentifier=win-x64
+
+      # The Rust thumbnail proxy needs an external cargo toolchain; skip it for
+      # the unsigned CI build so a missing toolchain cannot fail the publish.
+      - name: Publish
+        shell: pwsh
+        run: |
+          dotnet publish .\src\DeskBox\DeskBox.csproj `
+            -c Release -r win-x64 --self-contained false --no-restore `
+            -p:Platform=x64 `
+            -p:DeskBoxShellThumbnailProxy=false `
+            -p:DeskBoxRustNative=false `
+            -p:WindowsAppSDKSelfContained=false `
+            -o .\publish `
+            -bl:.\publish-build.binlog `
+            -flp:"logfile=publish-build.log;verbosity=normal;errorsonly=false" `
+            -v:minimal
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: |
+            publish-build.log
+            publish-build.binlog
+          if-no-files-found: ignore
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeskBox-win-x64
+          path: publish/
+          if-no-files-found: error

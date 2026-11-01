@@ -32,7 +32,7 @@ public sealed partial class SystemMonitorWidgetContent : UserControl
 /// Maps the widget status level (0 dashboard down, 1 stopped, 2 running,
 /// 3 busy) to the header dot brush.
 /// </summary>
-public sealed class SystemMonitorStateToBrushConverter : IValueConverter
+public sealed partial class SystemMonitorStateToBrushConverter : IValueConverter
 {
     private static readonly SolidColorBrush DashboardDownBrush = new(Windows.UI.Color.FromArgb(255, 138, 138, 138));
     private static readonly SolidColorBrush StoppedBrush = new(Windows.UI.Color.FromArgb(255, 229, 162, 60));
@@ -59,7 +59,7 @@ public sealed class SystemMonitorStateToBrushConverter : IValueConverter
     }
 }
 
-public sealed class SystemMonitorBusyToVisibilityConverter : IValueConverter
+public sealed partial class SystemMonitorBusyToVisibilityConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, string language)
     {

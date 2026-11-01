@@ -76,12 +76,14 @@
                                 <Grid>
                                     <TextBlock
                                         FontSize="11"
+                                        helpers:WidgetTextShadow.Cast="True"
                                         Text="{Binding NameText}"
                                         TextTrimming="CharacterEllipsis" />
                                     <TextBlock
                                         HorizontalAlignment="Right"
                                         FontSize="11"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        helpers:WidgetTextShadow.Cast="True"
                                         Text="{Binding UtilText}"
                                         Typography.NumeralAlignment="Tabular" />
                                 </Grid>
@@ -94,18 +96,21 @@
                                     <TextBlock
                                         FontSize="10"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        helpers:WidgetTextShadow.Cast="True"
                                         Text="{Binding TempText}"
                                         Typography.NumeralAlignment="Tabular" />
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         FontSize="10"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        helpers:WidgetTextShadow.Cast="True"
                                         Text="{Binding PowerText}"
                                         Typography.NumeralAlignment="Tabular" />
                                     <TextBlock
                                         HorizontalAlignment="Right"
                                         FontSize="10"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        helpers:WidgetTextShadow.Cast="True"
                                         Text="{Binding VramText}"
                                         Typography.NumeralAlignment="Tabular" />
                                 </Grid>
@@ -228,12 +233,14 @@
                                 <TextBlock
                                     FontSize="10"
                                     Width="120"
+                                    helpers:WidgetTextShadow.Cast="True"
                                     Text="{Binding NameText}"
                                     TextTrimming="CharacterEllipsis" />
                                 <TextBlock
                                     HorizontalAlignment="Right"
                                     FontSize="10"
                                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    helpers:WidgetTextShadow.Cast="True"
                                     Text="{Binding TempText}"
                                     Typography.NumeralAlignment="Tabular" />
                                 <StackPanel
@@ -244,11 +251,13 @@
                                     <TextBlock
                                         FontSize="10"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        helpers:WidgetTextShadow.Cast="True"
                                         Text="{Binding ReadText}"
                                         Typography.NumeralAlignment="Tabular" />
                                     <TextBlock
                                         FontSize="10"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        helpers:WidgetTextShadow.Cast="True"
                                         Text="{Binding WriteText}"
                                         Typography.NumeralAlignment="Tabular" />
                                 </StackPanel>

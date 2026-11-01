@@ -19,6 +19,7 @@ build_*.txt
 *.pdb
 *.exe
 *.dll
+!src/DeskBox/ThirdParty/Everything/*.dll
 *.msix
 *.msixbundle
 *.msixupload

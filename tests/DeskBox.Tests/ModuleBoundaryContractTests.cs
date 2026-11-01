@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using DeskBox.Models;
@@ -489,6 +489,9 @@ public sealed class ModuleBoundaryContractTests
         // +1: Directory.Move inside the scoped-restore staging dir remaps an
         // orphaned todo store onto a live widget id — confined to staging.
         ["src/DeskBox/Services/DeskBoxDataBackupService.cs"] = 12,
+        // Write-probe self test: creates a probe file in the data root then
+        // deletes it. App-owned surface only, no user-file mutation.
+        ["src/DeskBox/Services/DeskBoxDataPathService.cs"] = 1,
         ["src/DeskBox/Services/DeskBoxDiagnosticsBundleService.cs"] = 2,
         ["src/DeskBox/Services/DeskBoxDragData.cs"] = 3,
         ["src/DeskBox/Services/DesktopOrganizationCoordinator.cs"] = 1,
@@ -505,6 +508,9 @@ public sealed class ModuleBoundaryContractTests
         ["src/DeskBox/Services/GlanceImageService.cs"] = 3,
         ["src/DeskBox/Services/GlanceWidgetStore.cs"] = 1,
         ["src/DeskBox/Services/LegacySearchIndexCleanupService.cs"] = 1,
+        // Write-probe self test for the managed-storage root: probe file is
+        // created and deleted inside the storage surface the service owns.
+        ["src/DeskBox/Services/ManagedStoragePathService.cs"] = 1,
         ["src/DeskBox/Services/ManagedStorageDesktopShortcutService.cs"] = 1,
         ["src/DeskBox/Services/NativeNotificationActivationEnvelopeStore.cs"] = 6,
         ["src/DeskBox/Services/QuickCaptureService.cs"] = 8,

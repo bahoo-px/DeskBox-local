@@ -23,7 +23,7 @@ public sealed class DropThreadingContractTests
             fileService,
             StringComparison.Ordinal);
         Assert.Contains(
-            "FileSystemEntrySnapshot? entry = await Task.Run(() =>\n            ShouldDisplayEntry(path)",
+            "FileSystemEntrySnapshot? entry = await Task.Run(() =>\n            (includeHidden ? (File.Exists(path) || Directory.Exists(path)) : ShouldDisplayEntry(path))",
             fileService,
             StringComparison.Ordinal);
         Assert.Contains(

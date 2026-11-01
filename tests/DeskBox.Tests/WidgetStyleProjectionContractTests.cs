@@ -91,6 +91,8 @@ public sealed class WidgetStyleProjectionContractTests
         // file bindings + item payloads
         "mappedFolderPath", "followsDefaultStoragePath", "managedFolderName",
         "items", "fileAddedAtByPath", "fileAddedAtTrackingInitialized",
+        // virtual-group mode: path bindings are file payload, not style
+        "isVirtualGroup", "filePaths",
         // visibility + lock state
         "isVisible", "isDisabled", "isPositionLocked", "isSizeLocked",
         // compact/collapse state + per-widget density — layout, not style

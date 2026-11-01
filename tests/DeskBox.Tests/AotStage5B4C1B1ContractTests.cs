@@ -54,6 +54,10 @@ public sealed class AotStage5B4C1B1ContractTests
             "src/DeskBox/Controls/WidgetContents/FileSurfaceContent.xaml.cs");
         string viewModel = ReadRepositoryFile(
             "src/DeskBox/ViewModels/WidgetViewModel.Operations.cs");
+        // The public DeleteItemsAsync entry point moved into the virtual-group
+        // partial when that feature landed; the core loop stays in Operations.
+        string viewModelEntry = ReadRepositoryFile(
+            "src/DeskBox/ViewModels/WidgetViewModel.VirtualGroup.cs");
         string fileService = ReadRepositoryFile("src/DeskBox/Services/FileService.cs");
 
         Assert.Contains("CreateItemFlyout", menu, StringComparison.Ordinal);
@@ -66,7 +70,7 @@ public sealed class AotStage5B4C1B1ContractTests
         Assert.Contains("FileItemMenuBuilder.CreateMultiSelectionFlyout", surface, StringComparison.Ordinal);
         Assert.Contains("items => DeleteItemsAsync(items)", surface, StringComparison.Ordinal);
         Assert.Contains("bool permanently = false", surfaceOperations, StringComparison.Ordinal);
-        Assert.Contains("public async Task<FileDeleteBatchResult> DeleteItemsAsync", viewModel, StringComparison.Ordinal);
+        Assert.Contains("public async Task<FileDeleteBatchResult> DeleteItemsAsync", viewModelEntry, StringComparison.Ordinal);
         Assert.Contains("_fileService.DeleteEntriesWithShellAsync(", viewModel, StringComparison.Ordinal);
         Assert.Contains("_fileService.DeleteEntryAsync(", viewModel, StringComparison.Ordinal);
         Assert.Contains("DeleteEntryWithShell(normalizedPath, ownerHandle, allowUndo: true)", fileService, StringComparison.Ordinal);

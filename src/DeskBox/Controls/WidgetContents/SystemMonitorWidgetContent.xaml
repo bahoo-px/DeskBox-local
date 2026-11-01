@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="DeskBox.Controls.WidgetContents.SystemMonitorWidgetContent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:helpers="using:DeskBox.Helpers"
+    xmlns:local="using:DeskBox.Controls.WidgetContents"
+    Foreground="{ThemeResource TextFillColorPrimaryBrush}">
+
+    <UserControl.Resources>
+        <local:SystemMonitorStateToBrushConverter x:Key="StateToBrush" />
+        <local:SystemMonitorBusyToVisibilityConverter x:Key="BusyToVisibility" />
+    </UserControl.Resources>
+
+    <Grid Padding="14,10,14,10" RowSpacing="6">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Status header  -->
+        <Grid Grid.Row="0" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Ellipse
+                Grid.Column="0"
+                Width="10"
+                Height="10"
+                VerticalAlignment="Center"
+                Fill="{Binding StatusLevel, Converter={StaticResource StateToBrush}}" />
+            <TextBlock
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                FontSize="13"
+                FontWeight="SemiBold"
+                Text="{Binding StatusMessage}"
+                TextTrimming="CharacterEllipsis" />
+            <TextBlock
+                Grid.Column="2"
+                VerticalAlignment="Center"
+                FontSize="11"
+                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                Text="{Binding UpdatedText}"
+                Typography.NumeralAlignment="Tabular" />
+        </Grid>
+
+        <!--  Model line  -->
+        <StackPanel Grid.Row="1" Spacing="1">
+            <TextBlock
+                FontSize="10"
+                Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                Text="{Binding ModelLabel}" />
+            <TextBlock
+                FontSize="12"
+                Text="{Binding ModelText}"
+                TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+
+        <!--  Meter stack  -->
+        <StackPanel Grid.Row="2" Spacing="7">
+            <!--  GPUs  -->
+            <StackPanel Spacing="2">
+                <TextBlock
+                    FontSize="10"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                    Text="{Binding GpuLabel}" />
+                <ItemsControl ItemsSource="{Binding GpuRows}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Spacing="2" Margin="0,0,0,7">
+                                <Grid>
+                                    <TextBlock
+                                        FontSize="11"
+                                        Text="{Binding NameText}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="11"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding UtilText}"
+                                        Typography.NumeralAlignment="Tabular" />
+                                </Grid>
+                                <ProgressBar
+                                    Height="5"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Value="{Binding UtilValue}" />
+                                <Grid>
+                                    <TextBlock
+                                        FontSize="10"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding TempText}"
+                                        Typography.NumeralAlignment="Tabular" />
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="10"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding PowerText}"
+                                        Typography.NumeralAlignment="Tabular" />
+                                    <TextBlock
+                                        HorizontalAlignment="Right"
+                                        FontSize="10"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding VramText}"
+                                        Typography.NumeralAlignment="Tabular" />
+                                </Grid>
+                                <ProgressBar
+                                    Height="3"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Value="{Binding VramValue}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!--  CPU  -->
+            <StackPanel Spacing="2">
+                <Grid>
+                    <TextBlock
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Text="{Binding CpuLabel}" />
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding CpuUtilText}"
+                        Typography.NumeralAlignment="Tabular" />
+                </Grid>
+                <ProgressBar
+                    Height="4"
+                    Minimum="0"
+                    Maximum="100"
+                    Value="{Binding CpuUtilValue}" />
+                <TextBlock
+                    FontSize="10"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding CpuTempText}"
+                    Typography.NumeralAlignment="Tabular" />
+            </StackPanel>
+
+            <!--  Memory  -->
+            <StackPanel Spacing="2">
+                <Grid>
+                    <TextBlock
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Text="{Binding MemoryLabel}" />
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding MemoryText}"
+                        Typography.NumeralAlignment="Tabular" />
+                </Grid>
+                <ProgressBar
+                    Height="4"
+                    Minimum="0"
+                    Maximum="100"
+                    Value="{Binding MemoryValue}" />
+                <TextBlock
+                    FontSize="10"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding MemoryTempText}"
+                    Typography.NumeralAlignment="Tabular" />
+            </StackPanel>
+
+            <!--  Tokens  -->
+            <StackPanel Spacing="1">
+                <Grid>
+                    <TextBlock
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Text="{Binding TokenLabel}" />
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding ThroughputText}"
+                        Typography.NumeralAlignment="Tabular" />
+                </Grid>
+                <TextBlock
+                    FontSize="11"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding TokenText}"
+                    TextTrimming="CharacterEllipsis"
+                    Typography.NumeralAlignment="Tabular" />
+            </StackPanel>
+
+            <!--  Process  -->
+            <StackPanel Spacing="1">
+                <TextBlock
+                    FontSize="10"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                    Text="{Binding ProcessLabel}" />
+                <TextBlock
+                    FontSize="11"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding ProcessText}"
+                    TextTrimming="CharacterEllipsis"
+                    Typography.NumeralAlignment="Tabular" />
+            </StackPanel>
+
+            <!--  Disks  -->
+            <StackPanel Spacing="2">
+                <Grid>
+                    <TextBlock
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Text="{Binding DiskLabel}" />
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        FontSize="9"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Text="{Binding DiskUnitsText}" />
+                </Grid>
+                <ItemsControl ItemsSource="{Binding DriveRows}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,1,0,1">
+                                <TextBlock
+                                    FontSize="10"
+                                    Width="120"
+                                    Text="{Binding NameText}"
+                                    TextTrimming="CharacterEllipsis" />
+                                <TextBlock
+                                    HorizontalAlignment="Right"
+                                    FontSize="10"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    Text="{Binding TempText}"
+                                    Typography.NumeralAlignment="Tabular" />
+                                <StackPanel
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,52,0"
+                                    Orientation="Horizontal"
+                                    Spacing="6">
+                                    <TextBlock
+                                        FontSize="10"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding ReadText}"
+                                        Typography.NumeralAlignment="Tabular" />
+                                    <TextBlock
+                                        FontSize="10"
+                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                        Text="{Binding WriteText}"
+                                        Typography.NumeralAlignment="Tabular" />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!--  Power & electricity cost  -->
+            <StackPanel Spacing="1">
+                <Grid>
+                    <TextBlock
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Text="{Binding PowerLabel}" />
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        FontSize="11"
+                        Text="{Binding PowerText}"
+                        Typography.NumeralAlignment="Tabular" />
+                </Grid>
+                <TextBlock
+                    FontSize="10"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding PowerSubText}"
+                    TextTrimming="CharacterEllipsis"
+                    Typography.NumeralAlignment="Tabular" />
+                <Grid>
+                    <TextBlock
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        Text="{Binding CostLabel}" />
+                    <TextBlock
+                        HorizontalAlignment="Right"
+                        FontSize="10"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        Text="{Binding CostDayText}"
+                        Typography.NumeralAlignment="Tabular" />
+                </Grid>
+                <TextBlock
+                    HorizontalAlignment="Right"
+                    FontSize="10"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding CostTotalText}"
+                    Typography.NumeralAlignment="Tabular" />
+            </StackPanel>
+        </StackPanel>
+
+        <!--  Actions  -->
+        <Grid Grid.Row="3" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                Click="LaunchButton_Click"
+                Content="{Binding LaunchButtonText}"
+                IsEnabled="{Binding CanLaunch}" />
+            <Button
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                Click="StopButton_Click"
+                Content="{Binding StopButtonText}"
+                IsEnabled="{Binding CanStop}" />
+            <ProgressRing
+                Grid.Column="2"
+                Width="18"
+                Height="18"
+                Visibility="{Binding IsBusy, Converter={StaticResource BusyToVisibility}}" />
+        </Grid>
+    </Grid>
+</UserControl>
